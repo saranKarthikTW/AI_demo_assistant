@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+gradio = "*"
+urllib3 = "==1.26.6"
+openai-whisper = "*"
+transformers = "*"
+torch = ">=1.0+cpu"
+gtts = "*"
+openai = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
+#requires ffmpeg
+#https://stackoverflow.com/questions/7323261/uninstall-remove-a-homebrew-package-including-all-its-dependencies
