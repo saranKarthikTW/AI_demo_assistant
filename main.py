@@ -1,3 +1,4 @@
+import os
 import gradio
 from utils.whisper_adapter import text_from_audio
 from utils.gpt_adapter import seq2seq_response
@@ -11,7 +12,12 @@ def speech_to_speech_assistant(audio, language="auto", final_output_path="Output
     transcribed_text, language = text_from_audio(audio, language)
     inference_from_model = seq2seq_response(transcribed_text)
     text_to_speech(inference_from_model, language, final_output_path)
+    callback_to_play_audio(final_output_path)
     return [transcribed_text, inference_from_model, final_output_path]
+
+
+def callback_to_play_audio(file_path):
+    os.system(f"afplay {file_path}")
 
 
 if __name__ == "__main__":
