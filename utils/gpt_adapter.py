@@ -21,7 +21,6 @@ def __get_prompt_messages(input_text):
 
 
 def __set_openai_api_key():
-    print(os.getcwd())
     with open('/Users/sarankarthik/Documents/ml/asr-demo/GPT_SECRET_KEY.json') as f:
         data = json.load(f)
     openai.api_key = data["API_KEY"]
