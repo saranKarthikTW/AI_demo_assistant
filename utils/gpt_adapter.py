@@ -5,6 +5,8 @@ import json
 
 
 def seq2seq_response(input_text):
+    if input_text == "":
+        return "How may I help you?"
     messages = __get_prompt_messages(input_text)
     __set_openai_api_key()
     reply = __get_response_from_gpt(messages)
@@ -13,7 +15,7 @@ def seq2seq_response(input_text):
 
 def __get_prompt_messages(input_text):
     messages = [
-        {"role": "system", "content": "You are a helpful assistant."}
+        {"role": "system", "content": "You are a helpful assistant.Your replies will no more than three lines"}
     ]
     if input_text:
         messages.append({"role": "user", "content": input_text})

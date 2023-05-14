@@ -33,7 +33,6 @@ def __get_lms(audio):
 def __decode_lms(audio_as_lms, language):
     options = whisper.DecodingOptions(fp16=False, language=language)
     result = whisper.decode(model, audio_as_lms, options)
-    print('result.no_speech_prob ', result.no_speech_prob)
     return result
 
 

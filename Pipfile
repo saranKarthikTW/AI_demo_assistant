@@ -11,6 +11,7 @@ transformers = "*"
 torch = ">=1.0+cpu"
 gtts = "*"
 openai = "*"
+thread6 = "*"
 
 [dev-packages]
 
