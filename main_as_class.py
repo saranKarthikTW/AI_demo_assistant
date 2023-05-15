@@ -3,6 +3,7 @@ from enum import Enum
 from utils.whisper_adapter import text_from_audio
 import re
 from utils.gpt_adapter import seq2seq_response
+# from utils.flan_t5_adapter import seq2seq_response_flan
 from utils.gtts_adapter import text_to_speech
 import gradio
 import warnings
@@ -13,7 +14,7 @@ warnings.filterwarnings("ignore")
 
 
 class Status(Enum):
-    Sleeping = "Call 'buddy' to wake me"
+    Sleeping = "Call my name to wake"
     Processing = "Processing..."
     Inferring = "Computing..."
     Responding = "Responding..."
@@ -27,7 +28,7 @@ class SpeechAssistant:
     __inferred_response = ""
 
     def __init__(self, name, language, audio_output_path):
-        self.name = name
+        self.name = name.lower()
         self.language = language
         self.audio_output_path = audio_output_path
         self.status = Status.Sleeping
@@ -62,7 +63,7 @@ class SpeechAssistant:
         if self.status == Status.Sleeping:
             self.__listen_for_seconds(2)
         elif self.status == Status.Processing:
-            self.__listen_for_seconds(3)
+            self.__listen_for_seconds(4)
 
     def __update_status_on_audio(self, current_text):
         if self.status == Status.Sleeping:
@@ -84,6 +85,7 @@ class SpeechAssistant:
     def __infer_query(self, state):
         query_text = self.__trim_query_from_transcription(state, self.name)
         inferred_response = seq2seq_response(query_text)
+        # Can also use seq2seq_response_flan(query_text) instead of chatGPT
         return inferred_response
 
     def __callback_to_play_audio(self, audio_file_path):
@@ -116,7 +118,7 @@ if __name__ == "__main__":
     input_language = "en"  # or auto
     final_audio_path = "Output.mp3"
 
-    speech_assistant = SpeechAssistant("buddy", input_language, final_audio_path)
+    speech_assistant = SpeechAssistant("Tom", input_language, final_audio_path)
 
     gradio.Interface(
         title='Speech Assistant',

@@ -24,4 +24,4 @@ def __get_prompt_message(input_text):
     return prompt
 
 
-print(seq2seq_response_flan("What is thought"))
+# print(seq2seq_response_flan("What is thought"))
