@@ -6,8 +6,8 @@ from utils.gpt_adapter import seq2seq_response
 from utils.gtts_adapter import text_to_speech
 import gradio
 import warnings
-
-# import threading
+import threading
+import os
 
 warnings.filterwarnings("ignore")
 
@@ -52,8 +52,9 @@ class SpeechAssistant:
                 self.__text_from_speech = self.__get_query_only(state)
                 self.__inferred_response = self.__infer_query(self.__text_from_speech)
                 text_to_speech(self.__inferred_response, language, self.audio_output_path)
+                self.__callback_to_play_audio(self.audio_output_path)
                 # Preparing for next conversation
-                self.status, state = Status.Sleeping, ""
+                self.status, state = Status.Responding, ""
 
         return [self.status, self.__text_from_speech, self.__inferred_response, self.audio_output_path, state]
 
@@ -65,7 +66,7 @@ class SpeechAssistant:
 
     def __update_status_on_audio(self, current_text):
         if self.status == Status.Sleeping:
-            if self.name in current_text:
+            if self.name in current_text.lower():
                 self.status = Status.Processing
         elif self.status == Status.Processing:
             if current_text == "":
@@ -84,6 +85,16 @@ class SpeechAssistant:
         query_text = self.__trim_query_from_transcription(state, self.name)
         inferred_response = seq2seq_response(query_text)
         return inferred_response
+
+    def __callback_to_play_audio(self, audio_file_path):
+        t = threading.Thread(target=self.__play_audio, args=[audio_file_path])
+        t.setDaemon(False)
+        t.start()
+
+    def __play_audio(self, file_path):
+        time.sleep(0.5)
+        os.system(f"afplay {file_path}")
+        self.status = Status.Sleeping
 
     @staticmethod
     def __listen_for_seconds(seconds):
